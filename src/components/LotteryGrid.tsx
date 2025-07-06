@@ -28,7 +28,7 @@ export const LotteryGrid: React.FC<LotteryGridProps> = ({ drawnNumbers }) => {
                 className={`
                   w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm transition-all duration-500 border-2
                   ${isDrawn 
-                    ? 'bg-gradient-to-br from-red-500 to-red-600 text-white border-red-400 shadow-lg scale-110 animate-pulse' 
+                    ? 'bg-gradient-to-br from-yellow-500 to-yellow-600 text-white border-yellow-400 shadow-lg scale-110 animate-pulse' 
                     : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 border-gray-300 hover:border-blue-400 hover:bg-blue-50'
                   }
                 `}

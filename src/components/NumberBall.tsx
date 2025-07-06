@@ -22,7 +22,7 @@ export const NumberBall: React.FC<NumberBallProps> = ({
           ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 border-yellow-300 animate-bounce scale-125' 
           : isNew 
             ? 'bg-gradient-to-br from-green-500 to-green-600 border-green-400 animate-pulse scale-110' 
-            : 'bg-gradient-to-br from-red-500 to-red-600 border-red-400'
+            : 'bg-gradient-to-br from-yellow-500 to-yellow-600 border-yellow-400'
         }
       `}
       style={{
