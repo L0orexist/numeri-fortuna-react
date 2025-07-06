@@ -25,7 +25,6 @@ const Index = () => {
   const [showHistory, setShowHistory] = useState(false);
   const { toast } = useToast();
 
-  // Carica i dati dal localStorage all'avvio
   useEffect(() => {
     const savedNumbers = localStorage.getItem(STORAGE_KEY);
     const savedHistory = localStorage.getItem(HISTORY_KEY);
@@ -53,14 +52,12 @@ const Index = () => {
     }
   }, []);
 
-  // Salva i numeri estratti nel localStorage ogni volta che cambiano
   useEffect(() => {
     if (drawnNumbers.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(drawnNumbers));
     }
   }, [drawnNumbers]);
 
-  // Salva la cronologia nel localStorage
   useEffect(() => {
     if (history.length > 0) {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
@@ -79,7 +76,6 @@ const Index = () => {
     
     setIsExtracting(true);
     
-    // Simula l'animazione dell'estrazione
     const extractionAnimation = setInterval(() => {
       let randomNum;
       do {
@@ -88,7 +84,6 @@ const Index = () => {
       setCurrentExtraction(randomNum);
     }, 50);
 
-    // Dopo 2 secondi, estrae il numero finale
     setTimeout(() => {
       clearInterval(extractionAnimation);
       
@@ -158,23 +153,12 @@ const Index = () => {
       {/* Header */}
       <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center justify-center gap-3 flex-1">
-              <Trophy className="w-8 h-8 text-yellow-400" />
-              <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
-                LOTTERIA CLASSICA
-              </h1>
-              <Trophy className="w-8 h-8 text-yellow-400" />
-            </div>
-            <Button
-              onClick={clearAllData}
-              variant="destructive"
-              size="sm"
-              className="font-bold"
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Reset Completo
-            </Button>
+          <div className="flex items-center justify-center gap-3">
+            <Trophy className="w-8 h-8 text-yellow-400" />
+            <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
+              LOTTERIA CLASSICA
+            </h1>
+            <Trophy className="w-8 h-8 text-yellow-400" />
           </div>
           <p className="text-center text-white/80 mt-2">
             Estrazione dei Numeri Fortunati - {remainingNumbers} numeri rimanenti
@@ -184,19 +168,19 @@ const Index = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
-          {/* Layout principale: Estrazione + Tabellone affiancati */}
+          {/* Layout principale: Ultimo Numero Estratto (30%) + Tabellone (70%) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Sezione Ultimo Numero Estratto - Occupa più spazio */}
-            <div className="lg:col-span-7">
+            {/* Sezione Ultimo Numero Estratto - 30% dello spazio */}
+            <div className="lg:col-span-3">
               <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-yellow-400/50 h-full">
-                <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg">
-                  <CardTitle className="text-2xl flex items-center justify-center gap-2">
-                    <Shuffle className="w-6 h-6" />
-                    Ultimo Numero Estratto
+                <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg p-4">
+                  <CardTitle className="text-lg flex items-center justify-center gap-2">
+                    <Shuffle className="w-5 h-5" />
+                    Ultimo Numero
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 flex flex-col justify-center">
-                  <div className="flex justify-center items-center gap-4 min-h-[120px] mb-6">
+                <CardContent className="p-4 flex flex-col justify-center">
+                  <div className="flex justify-center items-center mb-4">
                     {currentExtraction && (
                       <NumberBall
                         number={currentExtraction}
@@ -219,37 +203,47 @@ const Index = () => {
                     )}
                   </div>
                   
-                  <div className="text-center mb-6">
-                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg px-6 py-2 font-bold">
-                      {drawnNumbers.length}/90 numeri estratti
+                  <div className="text-center mb-4">
+                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm px-4 py-1 font-bold">
+                      {drawnNumbers.length}/90
                     </Badge>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <div className="flex flex-col gap-2">
                     <Button
                       onClick={extractNumber}
                       disabled={isExtracting || isComplete}
-                      size="lg"
-                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold px-8 py-3 text-lg shadow-lg w-full sm:w-auto"
+                      size="sm"
+                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold text-sm"
                     >
-                      {isExtracting ? 'Estraendo...' : isComplete ? 'Estrazione Completata' : 'Estrai Numero'}
+                      {isExtracting ? 'Estraendo...' : isComplete ? 'Completata' : 'Estrai'}
                     </Button>
                     
                     <Button
                       onClick={resetCurrentExtraction}
                       variant="outline"
-                      size="lg"
-                      className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white font-bold px-8 py-3 text-lg w-full sm:w-auto"
+                      size="sm"
+                      className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white font-bold text-sm"
                     >
-                      <RotateCcw className="w-5 h-5 mr-2" />
-                      Nuova Estrazione
+                      <RotateCcw className="w-4 h-4 mr-1" />
+                      Nuova
+                    </Button>
+
+                    <Button
+                      onClick={clearAllData}
+                      variant="destructive"
+                      size="sm"
+                      className="font-bold text-sm"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Reset
                     </Button>
                   </div>
                   
                   {isComplete && (
-                    <div className="text-center mt-6">
-                      <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-lg px-6 py-2 font-bold">
-                        🎉 TUTTI I 90 NUMERI ESTRATTI! 🎉
+                    <div className="text-center mt-4">
+                      <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-xs px-3 py-1 font-bold">
+                        🎉 COMPLETATA! 🎉
                       </Badge>
                     </div>
                   )}
@@ -257,8 +251,8 @@ const Index = () => {
               </Card>
             </div>
 
-            {/* Tabellone dei Numeri */}
-            <div className="lg:col-span-5">
+            {/* Tabellone dei Numeri - 70% dello spazio */}
+            <div className="lg:col-span-9">
               <LotteryGrid drawnNumbers={drawnNumbers} />
             </div>
           </div>
