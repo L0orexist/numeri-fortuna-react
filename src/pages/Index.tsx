@@ -184,77 +184,84 @@ const Index = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
-          {/* Pannello principale di estrazione */}
-          <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-yellow-400/50">
-            <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg">
-              <CardTitle className="text-2xl flex items-center justify-center gap-2">
-                <Shuffle className="w-6 h-6" />
-                Ultimo Numero Estratto
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8">
-              <div className="flex justify-center items-center gap-4 min-h-[120px]">
-                {currentExtraction && (
-                  <NumberBall
-                    number={currentExtraction}
-                    isNew={true}
-                    isExtracting={isExtracting}
-                  />
-                )}
-                
-                {!currentExtraction && drawnNumbers.length > 0 && (
-                  <NumberBall
-                    number={drawnNumbers[drawnNumbers.length - 1]}
-                    isNew={false}
-                  />
-                )}
-                
-                {!currentExtraction && drawnNumbers.length === 0 && (
-                  <div className="w-16 h-16 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center text-gray-400 font-bold text-lg">
-                    ?
+          {/* Layout principale: Estrazione + Tabellone affiancati */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Sezione Ultimo Numero Estratto - Occupa più spazio */}
+            <div className="lg:col-span-7">
+              <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-yellow-400/50 h-full">
+                <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg">
+                  <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                    <Shuffle className="w-6 h-6" />
+                    Ultimo Numero Estratto
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 flex flex-col justify-center">
+                  <div className="flex justify-center items-center gap-4 min-h-[120px] mb-6">
+                    {currentExtraction && (
+                      <NumberBall
+                        number={currentExtraction}
+                        isNew={true}
+                        isExtracting={isExtracting}
+                      />
+                    )}
+                    
+                    {!currentExtraction && drawnNumbers.length > 0 && (
+                      <NumberBall
+                        number={drawnNumbers[drawnNumbers.length - 1]}
+                        isNew={false}
+                      />
+                    )}
+                    
+                    {!currentExtraction && drawnNumbers.length === 0 && (
+                      <div className="w-16 h-16 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center text-gray-400 font-bold text-lg">
+                        ?
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              
-              <div className="text-center mb-6">
-                <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg px-6 py-2 font-bold">
-                  {drawnNumbers.length}/90 numeri estratti
-                </Badge>
-              </div>
-              
-              <div className="flex justify-center gap-4 flex-wrap">
-                <Button
-                  onClick={extractNumber}
-                  disabled={isExtracting || isComplete}
-                  size="lg"
-                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold px-8 py-3 text-lg shadow-lg"
-                >
-                  {isExtracting ? 'Estraendo...' : isComplete ? 'Estrazione Completata' : 'Estrai Numero'}
-                </Button>
-                
-                <Button
-                  onClick={resetCurrentExtraction}
-                  variant="outline"
-                  size="lg"
-                  className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white font-bold px-8 py-3 text-lg"
-                >
-                  <RotateCcw className="w-5 h-5 mr-2" />
-                  Nuova Estrazione
-                </Button>
-              </div>
-              
-              {isComplete && (
-                <div className="text-center mt-6">
-                  <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-lg px-6 py-2 font-bold">
-                    🎉 TUTTI I 90 NUMERI ESTRATTI! 🎉
-                  </Badge>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                  
+                  <div className="text-center mb-6">
+                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-lg px-6 py-2 font-bold">
+                      {drawnNumbers.length}/90 numeri estratti
+                    </Badge>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    <Button
+                      onClick={extractNumber}
+                      disabled={isExtracting || isComplete}
+                      size="lg"
+                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold px-8 py-3 text-lg shadow-lg w-full sm:w-auto"
+                    >
+                      {isExtracting ? 'Estraendo...' : isComplete ? 'Estrazione Completata' : 'Estrai Numero'}
+                    </Button>
+                    
+                    <Button
+                      onClick={resetCurrentExtraction}
+                      variant="outline"
+                      size="lg"
+                      className="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white font-bold px-8 py-3 text-lg w-full sm:w-auto"
+                    >
+                      <RotateCcw className="w-5 h-5 mr-2" />
+                      Nuova Estrazione
+                    </Button>
+                  </div>
+                  
+                  {isComplete && (
+                    <div className="text-center mt-6">
+                      <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-lg px-6 py-2 font-bold">
+                        🎉 TUTTI I 90 NUMERI ESTRATTI! 🎉
+                      </Badge>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
 
-          {/* Griglia dei numeri */}
-          <LotteryGrid drawnNumbers={drawnNumbers} />
+            {/* Tabellone dei Numeri */}
+            <div className="lg:col-span-5">
+              <LotteryGrid drawnNumbers={drawnNumbers} />
+            </div>
+          </div>
 
           {/* Cronologia estrazioni - Collapsible */}
           <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-purple-400/50">
