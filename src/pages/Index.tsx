@@ -187,7 +187,7 @@ const Index = () => {
           {/* Layout principale: Estrazione + Tabellone affiancati */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Sezione Ultimo Numero Estratto - Occupa più spazio */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-5">
               <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-yellow-400/50 h-full">
                 <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg">
                   <CardTitle className="text-2xl flex items-center justify-center gap-2">
@@ -258,7 +258,7 @@ const Index = () => {
             </div>
 
             {/* Tabellone dei Numeri */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-7">
               <LotteryGrid drawnNumbers={drawnNumbers} />
             </div>
           </div>
