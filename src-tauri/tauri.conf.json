@@ -3,13 +3,13 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:8080",
+    "devPath": "http://localhost:5173",
     "distDir": "../dist",
     "withGlobalTauri": false
   },
   "package": {
     "productName": "Lotteria",
-    "version": "0.0.0"
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -17,6 +17,17 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "window": {
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "startDragging": true
       }
     },
     "bundle": {
@@ -29,7 +40,10 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ]
+      ],
+      "category": "Game",
+      "shortDescription": "Lotteria - Estrattore di numeri",
+      "longDescription": "Applicazione per estrarre numeri casuali per lotterie e giochi."
     },
     "security": {
       "csp": null
@@ -40,7 +54,10 @@
         "resizable": true,
         "title": "Lotteria",
         "width": 1200,
-        "height": 800
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 600,
+        "center": true
       }
     ]
   }
