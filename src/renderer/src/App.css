@@ -105,9 +105,8 @@ All colors MUST be HSL.
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 0;
+  padding:0;
   text-align: center;
 }
 
@@ -145,4 +144,9 @@ All colors MUST be HSL.
 
 .read-the-docs {
   color: #888;
+}
+
+*{
+  margin:0;
+  padding:0;
 }

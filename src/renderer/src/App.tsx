@@ -140,8 +140,8 @@ function App(): React.JSX.Element {
 
 
   return (
-    <>
-       <div className="min-h-screen bg-gradient-to-br from-yellow-900 via-yellow-800 to-orange-600 font-sans">
+    <div className="w-full">
+       <div className="min-h-screen p-8 m-0 w-[100vw] bg-gradient-to-br from-yellow-900 via-yellow-800 to-orange-600 font-sans">
             <main className="px-4 mx-auto pb-8">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 {/* Colonna sinistra: Ultimo Numero */}
@@ -176,7 +176,7 @@ function App(): React.JSX.Element {
                           )}
                         </div>
                         <div className="text-center">
-                          <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-6xl px-8 py-3 font-extrabold">
+                          <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-5xl transition-all xl:text-6xl px-6 xl:px-8 py-3 font-extrabold max-xl:scale-90">
                             {drawnNumbers.length}/{estrazione}
                           </Badge>
                         </div>
@@ -249,7 +249,7 @@ function App(): React.JSX.Element {
               </div>
             </main>
           </div>
-    </>
+    </div>
   )
 }
 
