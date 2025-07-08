@@ -1,9 +1,10 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Shuffle, RotateCcw, Trophy, Trash2, ChevronDown, ChevronUp, Cog } from 'lucide-react';
-import { LotteryGrid } from '@/components/LotteryGrid';
+import { ExtractedNumbersGrid } from '@/components/ExtractedNumbersGrid';
 import { NumberBall } from '@/components/NumberBall';
 import { ExtractionHistory } from '@/components/ExtractionHistory';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +28,7 @@ const Index = () => {
   const [history, setHistory] = useState<Extraction[]>([]);
   const [currentExtraction, setCurrentExtraction] = useState<number | null>(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -68,16 +70,17 @@ const Index = () => {
 
   // Gestione cambio quantità numeri da estrarre
   const handleConfirmExtraction = () => {
-    if (desiredExtraction < 1 || desiredExtraction > 200) {
+    if (desiredExtraction < 1 || desiredExtraction > 5000) {
       toast({
         title: "Numero non valido",
-        description: "Inserisci un numero tra 1 e 200",
+        description: "Inserisci un numero tra 1 e 5000",
         variant: "destructive"
       });
       setDesiredExtraction(90);
       return;
     }
     setEstrazione(desiredExtraction);
+    setShowSettings(false);
     toast({
       title: "Impostazione confermata",
       description: `Verranno estratti ${desiredExtraction} numeri.`,
@@ -140,7 +143,6 @@ const Index = () => {
     setCurrentExtraction(null);
     setIsExtracting(false);
     localStorage.removeItem(STORAGE_KEY);
-    // Riabilita la configurazione se vuoi permettere di cambiare il numero dopo un reset
     setEstrazione(90);
     setDesiredExtraction(90);
   };
@@ -154,6 +156,7 @@ const Index = () => {
     localStorage.removeItem(HISTORY_KEY);
     setEstrazione(90);
     setDesiredExtraction(90);
+    setShowSettings(false);
     toast({
       title: "Dati cancellati",
       description: "Tutti i dati sono stati rimossi dal dispositivo",
@@ -167,112 +170,141 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-900 via-yellow-800 to-orange-600 font-sans">
       <main className="px-4 mx-auto pb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Colonna sinistra: Ultimo Numero */}
-          <section className="lg:col-span-3 mt-2">
-            <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-yellow-400/50">
-              <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg p-8">
-                <CardTitle className="text-4xl flex items-center justify-center gap-3">
-                  <Shuffle className="w-10 h-10" />
-                  Ultimo Numero
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-8">
-                <div>
-                  <div className="flex justify-center items-center m-6 min-h-[100px]">
+        <div className="flex flex-col gap-8">
+          {/* Sezione superiore: Ultimo Numero e Configurazione */}
+          <section className="flex flex-col lg:flex-row gap-8 items-start mt-2">
+            {/* Ultimo Numero - Più grande */}
+            <div className="flex-1">
+              <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-yellow-400/50">
+                <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-t-lg p-8">
+                  <CardTitle className="text-5xl flex items-center justify-center gap-3">
+                    <Shuffle className="w-12 h-12" />
+                    Ultimo Numero
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-12">
+                  <div className="flex justify-center items-center mb-8 min-h-[150px]">
                     {currentExtraction && (
                       <NumberBall
                         number={currentExtraction}
                         isNew={true}
                         isExtracting={isExtracting}
+                        size="huge"
                       />
                     )}
                     {!currentExtraction && drawnNumbers.length > 0 && (
                       <NumberBall
                         number={drawnNumbers[drawnNumbers.length - 1]}
                         isNew={false}
+                        size="huge"
                       />
                     )}
                     {!currentExtraction && drawnNumbers.length === 0 && (
-                      <div className="w-24 h-24 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center text-gray-400 font-extrabold text-4xl">
+                      <div className="w-32 h-32 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center text-gray-400 font-extrabold text-5xl">
                         ?
                       </div>
                     )}
                   </div>
-                  <div className="text-center">
-                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-6xl px-8 py-3 font-extrabold">
+                  <div className="text-center mb-8">
+                    <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-7xl px-12 py-4 font-extrabold">
                       {drawnNumbers.length}/{estrazione}
                     </Badge>
                   </div>
-                </div>
-                <div className="flex flex-col gap-5 mt-8">
-                  <Button
-                    onClick={extractNumber}
-                    disabled={isExtracting || isComplete}
-                    size="lg"
-                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-extrabold text-2xl py-6"
-                  >
-                    {isExtracting ? 'Estraendo...' : isComplete ? 'Completata' : 'Estrai'}
-                  </Button>
-                  <Button
-                    onClick={clearAllData}
-                    variant="destructive"
-                    size="lg"
-                    className="font-extrabold text-2xl py-6"
-                  >
-                    <Trash2 className="w-7 h-7 mr-3" />
-                    Reset
-                  </Button>
-                </div>
-                {isComplete && (
-                  <div className="text-center mt-8">
-                    <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-2xl px-8 py-3 font-extrabold">
-                      🎉 COMPLETATA! 🎉
-                    </Badge>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            {/* quantita' di numeri da giocare */}
-            {drawnNumbers.length === 0 && (
-              <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-gray-400/50 mt-5">
-                <CardHeader className="text-center bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-t-lg p-8">
-                  <CardTitle className="text-4xl flex items-center justify-center gap-3">
-                    <Cog className="w-10 h-10" />
-                    Seleziona numeri
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-8">
                   <div className="flex flex-col gap-6">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl font-bold">Numeri da estrarre:</span>
-                      <input
-                        type="number"
-                        min={1}
-                        max={200}
-                        value={desiredExtraction}
-                        onChange={e => setDesiredExtraction(Number(e.target.value))}
-                        className="w-24 text-2xl font-bold text-center border-2 border-gray-300 rounded-lg p-2"
-                      />
-                    </div>
                     <Button
-                      onClick={handleConfirmExtraction}
-                      className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold text-xl py-4"
+                      onClick={extractNumber}
+                      disabled={isExtracting || isComplete}
+                      size="lg"
+                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-extrabold text-3xl py-8"
                     >
-                      Conferma
+                      {isExtracting ? 'Estraendo...' : isComplete ? 'Completata' : 'Estrai'}
+                    </Button>
+                    <Button
+                      onClick={clearAllData}
+                      variant="destructive"
+                      size="lg"
+                      className="font-extrabold text-3xl py-8"
+                    >
+                      <Trash2 className="w-8 h-8 mr-3" />
+                      Reset
                     </Button>
                   </div>
+                  {isComplete && (
+                    <div className="text-center mt-8">
+                      <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black text-3xl px-12 py-4 font-extrabold">
+                        🎉 COMPLETATA! 🎉
+                      </Badge>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
+            </div>
+
+            {/* Configurazione - Solo all'inizio */}
+            {(drawnNumbers.length === 0 || showSettings) && (
+              <div className="lg:w-96">
+                <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-2 border-gray-400/50">
+                  <CardHeader className="text-center bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-t-lg p-6">
+                    <CardTitle className="text-3xl flex items-center justify-center gap-3">
+                      <Cog className="w-8 h-8" />
+                      Seleziona numeri
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col gap-6">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xl font-bold">Range 1 -</span>
+                        <input
+                          type="number"
+                          min={1}
+                          max={5000}
+                          value={desiredExtraction}
+                          onChange={e => setDesiredExtraction(Number(e.target.value))}
+                          className="w-32 text-2xl font-bold text-center border-2 border-gray-300 rounded-lg p-2"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleConfirmExtraction}
+                        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold text-xl py-4"
+                      >
+                        Conferma
+                      </Button>
+                      {drawnNumbers.length > 0 && (
+                        <Button
+                          onClick={() => setShowSettings(false)}
+                          variant="outline"
+                          className="font-bold text-lg py-3"
+                        >
+                          Chiudi
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Pulsante Impostazioni quando non mostrato */}
+            {drawnNumbers.length > 0 && !showSettings && (
+              <div className="lg:w-20">
+                <Button
+                  onClick={() => setShowSettings(true)}
+                  variant="outline"
+                  size="lg"
+                  className="w-full h-20"
+                >
+                  <Cog className="w-8 h-8" />
+                </Button>
+              </div>
             )}
           </section>
 
-          {/* Colonna destra: Tabellone numeri */}
-          <section className="lg:col-span-9 flex items-center justify-center mt-2">
-            <div className="w-full text-2xl">
-              <LotteryGrid drawnNumbers={drawnNumbers} maxNumber={estrazione} />
-            </div>
-          </section>
+          {/* Sezione inferiore: Griglia numeri estratti */}
+          {drawnNumbers.length > 0 && (
+            <section className="w-full">
+              <ExtractedNumbersGrid drawnNumbers={drawnNumbers} />
+            </section>
+          )}
         </div>
       </main>
     </div>
